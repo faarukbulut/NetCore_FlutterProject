@@ -29,6 +29,46 @@ namespace NetCoreAPI.Controllers
             return Ok("Yeni kategori başarıyla eklendi");
         }
 
+        [HttpGet("{id}")]
+        public IActionResult KategoriGet(int id)
+        {
+            var value = kategoriler.Where(x => x.KategoriID == id).FirstOrDefault();
+
+            if(value == null)
+            {
+                return BadRequest("Kategori mevcut değil");
+            }
+            else
+            {
+                return Ok(value);
+            }
+
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult KategoriUpdate(int id, [FromBody] Kategori kategori)
+        {
+            var value = kategoriler.Where(x => x.KategoriID == id).FirstOrDefault();
+
+            value.KategoriAd = kategori.KategoriAd;
+            return Ok("Kategori Düzenlendi");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult KategoriDelete(int id)
+        {
+            var value = kategoriler.Where(x => x.KategoriID == id).FirstOrDefault();
+
+            if(value == null)
+            {
+                return BadRequest("Kategori bulunamadı");
+            }
+
+            kategoriler.Remove(value);
+            return Ok("Kategori başarıyla silindi");
+            
+        }
+
         private static List<Kategori> kategoriler = new List<Kategori>
         {
             new Kategori { KategoriID = 1, KategoriAd = "Elektronik" },

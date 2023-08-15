@@ -7,11 +7,12 @@ import '../models/kategori.dart';
 
 class KategoriController extends GetxController{
   RxList<Kategori> kategoriler = RxList<Kategori>();
+  RxList<Kategori> kategori = RxList<Kategori>();
   RxBool isLoading = false.obs;
 
   TextEditingController kategoriAd = TextEditingController();
 
-  void islemSirasi() async{
+  void kategoriListeAlIslemSirasi() async{
     await kategoriListesiniAl();
     yuklemeIslemi();
   }
@@ -27,7 +28,7 @@ class KategoriController extends GetxController{
       final List<dynamic> responseData = json.decode(response.body);
       kategoriler.value = responseData.map((json) => Kategori.fromJson(json)).toList();
     } else {
-      throw Exception('Veri alınamadı');
+      print('Kategori listesi alınamadı');
     }
   }
 
@@ -48,10 +49,57 @@ class KategoriController extends GetxController{
       kategoriAd.text = "";
       return Get.to(() => KategoriListeSayfa());
     } else {
-      throw Exception('Kategori eklenemedi');
+      print('Kategori eklenemedi');
     }
   }
 
+  void kategoriAlIslemSirasi(int id) async{
+    await kategoriAl(id);
+    kategoriAd.text = kategori[0].kategoriAd;
+    yuklemeIslemi();
+  }
+
+  Future<void> kategoriAl(int id) async{
+    final response = await http.get(Uri.parse('https://localhost:7176/api/Kategori/$id'));
+
+    if(response.statusCode == 200){
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      kategori.assignAll([Kategori.fromJson(responseData)]);
+    }else{
+      print('Kategori alınamadı');
+    }
+  }
+
+  Future<void> kategoriDuzenle(int id) async{
+    final Map<String, dynamic> data = {
+      'kategoriAd': kategoriAd.text,
+    };
+
+    final response = await http.put(
+      Uri.parse('https://localhost:7176/api/Kategori/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      kategoriAd.text = "";
+      return Get.to(() => KategoriListeSayfa());
+    } else {
+      print('Kategori düzenlenemedi');
+    }
+
+  }
+
+
+  Future<void> kategoriSil(int id) async{
+    final response = await http.delete(Uri.parse('https://localhost:7176/api/Kategori/$id'));
+
+    if (response.statusCode != 200) {
+      print("Kategori Silinemedi");
+    }
+  }
 
 
 }

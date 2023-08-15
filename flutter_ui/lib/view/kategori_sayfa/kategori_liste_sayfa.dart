@@ -1,3 +1,4 @@
+import 'package:flutter_ui/view/kategori_sayfa/kategori_duzenle_sayfa.dart';
 import 'package:flutter_ui/view/kategori_sayfa/kategori_ekle_sayfa.dart';
 import 'package:flutter_ui/view/yonetim_sayfa.dart';
 import 'package:get/get.dart';
@@ -19,7 +20,7 @@ class _KategoriListeSayfaState extends State<KategoriListeSayfa> {
   @override
   void initState() {
     super.initState();
-    _kategoriController.islemSirasi();
+    _kategoriController.kategoriListeAlIslemSirasi();
   }
 
   @override
@@ -62,8 +63,16 @@ class _KategoriListeSayfaState extends State<KategoriListeSayfa> {
                     return DataRow(cells: [
                       DataCell(Text(kategori.kategoriID.toString())),
                       DataCell(Text(kategori.kategoriAd)),
-                      const DataCell(Text('Düzenle', style: TextStyle(color: Colors.blue))),
-                      const DataCell(Text('Sil', style: TextStyle(color: Colors.red))),
+                      DataCell(GestureDetector(onTap:(){Get.to(() => KategoriDuzenleSayfa(kategoriID: kategori.kategoriID) );}, child: Text('Düzenle', style: TextStyle(color: Colors.blue)))),
+                      DataCell(
+                        GestureDetector(
+                          onTap:() async{
+                            await _kategoriController.kategoriSil(kategori.kategoriID);
+                            _kategoriController.kategoriListesiniAl();
+                          },
+                          child: Text('Sil', style: TextStyle(color: Colors.red)),
+                        ),
+                      ),
                     ]);
                   }).toList(),
                 ),
