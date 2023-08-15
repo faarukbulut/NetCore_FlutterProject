@@ -1,0 +1,7 @@
+
+flutter_ui/.dart_tool/*
+flutter_ui/.idea/*
+flutter_ui/build/*
+NetCoreAPI/bin/*
+NetCoreAPI/obj/*
+NetCoreAPI/.vs/*
