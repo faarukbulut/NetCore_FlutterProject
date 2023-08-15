@@ -1,3 +1,5 @@
+import 'package:flutter_ui/view/kategori_sayfa/kategori_ekle_sayfa.dart';
+import 'package:flutter_ui/view/yonetim_sayfa.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../components/widget.dart';
@@ -32,10 +34,14 @@ class _KategoriListeSayfaState extends State<KategoriListeSayfa> {
           children: [
             Row(
               children: [
+                GestureDetector(
+                  onTap:(){Get.to(() => YonetimSayfa());},
+                  child: const Icon(Icons.chevron_left),
+                ),
                 const Text('Kategori Listesi', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                 const Spacer(),
                 butonWidget(
-                  (){},
+                  (){Get.to(() => KategoriEkleSayfa());},
                   "Kategori Ekle"
                 ),
               ],

@@ -14,6 +14,21 @@ namespace NetCoreAPI.Controllers
             return Ok(kategoriler);
         }
 
+        [HttpPost]
+        public IActionResult KategoriAdd([FromBody] Kategori kategori)
+        {
+            if (kategori == null)
+            {
+                return BadRequest("Kategori boş");
+            }
+
+            int kategoriID = kategoriler.Max(x => x.KategoriID) + 1;
+            kategori.KategoriID = kategoriID;
+
+            kategoriler.Add(kategori);
+            return Ok("Yeni kategori başarıyla eklendi");
+        }
+
         private static List<Kategori> kategoriler = new List<Kategori>
         {
             new Kategori { KategoriID = 1, KategoriAd = "Elektronik" },
