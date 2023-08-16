@@ -36,7 +36,7 @@ class _KategoriListeSayfaState extends State<KategoriListeSayfa> {
             Row(
               children: [
                 GestureDetector(
-                  onTap:(){Get.to(() => YonetimSayfa());},
+                  onTap:(){Get.to(() => const YonetimSayfa());},
                   child: const Icon(Icons.chevron_left),
                 ),
                 const Text('Kategori Listesi', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/view/yonetim_sayfa.dart';
 import 'package:get/get.dart';
+import 'view/giris_sayfa/giris_sayfa.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: YonetimSayfa(),
+      home: GirisSayfa(),
     );
   }
 }
