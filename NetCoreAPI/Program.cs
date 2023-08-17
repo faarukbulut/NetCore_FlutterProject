@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -22,8 +23,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidIssuer = "https://localhost:7176/",
         ValidAudience = "https://localhost:7176/",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("alesiaNetCoreFlutter2306"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("alesiaNetCoreFlutter2306")),
     };
+});
+
+builder.Services.AddCors(x =>
+{
+    x.AddPolicy("AllowAnyOrigin", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
 });
 
 

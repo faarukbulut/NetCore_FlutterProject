@@ -28,11 +28,13 @@ namespace NetCoreAPI.Controllers
             var key = Encoding.UTF8.GetBytes("alesiaNetCoreFlutter2306");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Issuer = "https://localhost:7176/",
+                Audience = "https://localhost:7176/",
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, authUser.AdSoyad),
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

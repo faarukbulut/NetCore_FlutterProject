@@ -34,12 +34,8 @@ class KullaniciController extends GetxController{
 
     if(response.statusCode == 200){
       final responseBody = json.decode(response.body);
-      final token = responseBody['token'];
-
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      kullanici.value.adSoyad = decodedToken['name'] as String?;
-
-      await SecureStorage().saveToken(token);
+      currentUserBilgileriniAl(responseBody['token']);
+      await SecureStorage().saveToken(responseBody['token']);
       Get.offAll(() => const YonetimSayfa());
     }else{
       final hataMesaj = response.body;
@@ -52,6 +48,11 @@ class KullaniciController extends GetxController{
       );
     }
 
+  }
+
+  void currentUserBilgileriniAl(String token) {
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    kullanici.value.adSoyad = decodedToken['name'] as String?;
   }
 
 

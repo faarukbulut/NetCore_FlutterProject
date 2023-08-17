@@ -36,14 +36,7 @@ class _GirisKontrolState extends State<GirisKontrol> {
 
     // current user bilgilerini al
     if (token != null) {
-
-      var kullanici = _kullaniciController.kullanici.value;
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token!);
-      kullanici.adSoyad = decodedToken['name'];
-
-      _kullaniciController.kullanici.update((val) {
-        val!.adSoyad = kullanici.adSoyad;
-      });
+      _kullaniciController.currentUserBilgileriniAl(token!);
     }
   }
 
