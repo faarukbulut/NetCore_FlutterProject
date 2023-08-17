@@ -3,6 +3,7 @@ import 'package:flutter_ui/view/kategori_sayfa/kategori_liste_sayfa.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../helpers/secure_storage.dart';
 import '../models/kategori.dart';
 
 class KategoriController extends GetxController{
@@ -22,7 +23,14 @@ class KategoriController extends GetxController{
   }
 
   Future<void> kategoriListesiniAl() async {
-    final response = await http.get(Uri.parse('https://localhost:7176/api/Kategori'));
+    var token = await SecureStorage().getToken();
+
+    final response = await http.get(
+      Uri.parse('https://localhost:7176/api/Kategori'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
     
     if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body);
