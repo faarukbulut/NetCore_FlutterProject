@@ -17,6 +17,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.5
   http: ^0.13.6
+  flutter_secure_storage: ^8.0.0
+  jwt_decoder: ^2.0.1
 
 dev_dependencies:
   flutter_test:

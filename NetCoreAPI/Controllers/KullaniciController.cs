@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using NetCoreAPI.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace NetCoreAPI.Controllers
 {
@@ -19,15 +23,24 @@ namespace NetCoreAPI.Controllers
                 return BadRequest("Kullanıcı adı veya şifre hatalı");
             }
 
-            return Ok(new
+            //// JWT TOKEN
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes("alesiaNetCoreFlutter2306");
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                kullaniciAdi = authUser.KullaniciAdi,
-                adSoyad = authUser.AdSoyad,
-            });
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, authUser.AdSoyad),
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
 
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new { Token = tokenString });
         }
-
-
 
 
 

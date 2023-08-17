@@ -1,11 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/view/yonetim_sayfa.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import '../helpers/secure_storage.dart';
 import '../models/kullanici.dart';
 
 class KullaniciController extends GetxController{
@@ -31,13 +32,15 @@ class KullaniciController extends GetxController{
       body: jsonEncode(data),
     );
 
-
     if(response.statusCode == 200){
       final responseBody = json.decode(response.body);
-      kullanici.value = Kullanici.fromJson(responseBody);
+      final token = responseBody['token'];
 
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+      kullanici.value.adSoyad = decodedToken['name'] as String?;
 
-      Get.to(() => const YonetimSayfa());
+      await SecureStorage().saveToken(token);
+      Get.offAll(() => const YonetimSayfa());
     }else{
       final hataMesaj = response.body;
       showDialog(
@@ -48,8 +51,6 @@ class KullaniciController extends GetxController{
         ),
       );
     }
-
-
 
   }
 
