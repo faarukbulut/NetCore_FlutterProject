@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import 'colors.dart';
 
 GestureDetector butonWidget(Function fonksiyon, String butonText) {

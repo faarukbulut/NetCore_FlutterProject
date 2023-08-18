@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/view/giris_sayfa/giris_sayfa.dart';
 import 'package:flutter_ui/view/kategori_sayfa/kategori_liste_sayfa.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -31,16 +32,18 @@ class KategoriController extends GetxController{
         'Authorization': 'Bearer $token',
       },
     );
-    
+
     if (response.statusCode == 200) {
       final List<dynamic> responseData = json.decode(response.body);
       kategoriler.value = responseData.map((json) => Kategori.fromJson(json)).toList();
     } else {
-      print('Kategori listesi alınamadı');
+      Get.offAll(() => const GirisSayfa());
     }
   }
 
   Future<void> kategoriEkle() async{
+    var token = await SecureStorage().getToken();
+
     final Map<String, dynamic> data = {
       'kategoriAd': kategoriAd.text,
     };
@@ -49,15 +52,16 @@ class KategoriController extends GetxController{
       Uri.parse('https://localhost:7176/api/Kategori'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(data),
     );
 
     if (response.statusCode == 200) {
       kategoriAd.text = "";
-      return Get.to(() => KategoriListeSayfa());
+      return Get.to(() => const KategoriListeSayfa());
     } else {
-      print('Kategori eklenemedi');
+      Get.offAll(() => const GirisSayfa());
     }
   }
 
@@ -68,17 +72,27 @@ class KategoriController extends GetxController{
   }
 
   Future<void> kategoriAl(int id) async{
-    final response = await http.get(Uri.parse('https://localhost:7176/api/Kategori/$id'));
+    var token = await SecureStorage().getToken();
+
+    final response = await http.get(
+      Uri.parse('https://localhost:7176/api/Kategori/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if(response.statusCode == 200){
       final Map<String, dynamic> responseData = json.decode(response.body);
       kategori.assignAll([Kategori.fromJson(responseData)]);
     }else{
-      print('Kategori alınamadı');
+      Get.offAll(() => const GirisSayfa());
     }
   }
 
   Future<void> kategoriDuzenle(int id) async{
+
+    var token = await SecureStorage().getToken();
+
     final Map<String, dynamic> data = {
       'kategoriAd': kategoriAd.text,
     };
@@ -87,25 +101,34 @@ class KategoriController extends GetxController{
       Uri.parse('https://localhost:7176/api/Kategori/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
       },
       body: jsonEncode(data),
     );
 
     if (response.statusCode == 200) {
       kategoriAd.text = "";
-      return Get.to(() => KategoriListeSayfa());
+      return Get.to(() => const KategoriListeSayfa());
     } else {
-      print('Kategori düzenlenemedi');
+      Get.offAll(() => const GirisSayfa());
     }
 
   }
 
 
   Future<void> kategoriSil(int id) async{
-    final response = await http.delete(Uri.parse('https://localhost:7176/api/Kategori/$id'));
+
+    var token = await SecureStorage().getToken();
+
+    final response = await http.delete(
+      Uri.parse('https://localhost:7176/api/Kategori/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode != 200) {
-      print("Kategori Silinemedi");
+      Get.offAll(() => const GirisSayfa());
     }
   }
 
