@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NetCoreAPI.DAL;
+using NetCoreAPI.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // JWT TOKEN
+var jwtSettings = builder.Configuration.GetSection("AppSettings").Get<JwtSettings>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
 {
     x.TokenValidationParameters = new TokenValidationParameters
@@ -21,9 +24,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = "https://localhost:7176/",
-        ValidAudience = "https://localhost:7176/",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("alesiaNetCoreFlutter2306")),
+        ValidIssuer = jwtSettings.ApiBaseUrl,
+        ValidAudience = jwtSettings.ApiBaseUrl,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
     };
 });
 
@@ -31,10 +34,12 @@ builder.Services.AddCors(x =>
 {
     x.AddPolicy("AllowSpecificOrigin", builder =>
     {
-        builder.WithOrigins("https://localhost:7176/").AllowAnyMethod().AllowAnyHeader();
+        builder.WithOrigins(jwtSettings.ApiBaseUrl).AllowAnyMethod().AllowAnyHeader();
     });
 });
 
+
+builder.Services.AddScoped<IBuildToken, BuildToken>();
 
 var app = builder.Build();
 

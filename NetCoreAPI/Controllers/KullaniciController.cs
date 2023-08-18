@@ -13,6 +13,13 @@ namespace NetCoreAPI.Controllers
     [ApiController]
     public class KullaniciController : ControllerBase
     {
+        private readonly IBuildToken _buildToken;
+
+        public KullaniciController(IBuildToken buildToken)
+        {
+            _buildToken = buildToken;
+        }
+
         [HttpPost]
         public IActionResult Oturum([FromBody] Kullanici kullanici)
         {
@@ -23,7 +30,7 @@ namespace NetCoreAPI.Controllers
                 return BadRequest("Kullanıcı adı veya şifre hatalı");
             }
 
-            return Ok(new { Token = new BuildToken().GenerateToken(authUser) });
+            return Ok(new { Token = _buildToken.GenerateToken(authUser) });
         }
 
 

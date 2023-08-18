@@ -6,16 +6,23 @@ using System.Text;
 
 namespace NetCoreAPI.DAL
 {
-    public class BuildToken
+    public class BuildToken : IBuildToken
     {
+        private readonly IConfiguration _configuration;
+
+        public BuildToken(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public string GenerateToken(Kullanici authUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes("alesiaNetCoreFlutter2306");
+            var key = Encoding.UTF8.GetBytes(_configuration["AppSettings:SecretKey"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = "https://localhost:7176/",
-                Audience = "https://localhost:7176/",
+                Issuer = _configuration["AppSettings:ApiBaseUrl"],
+                Audience = _configuration["AppSettings:ApiBaseUrl"],
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, authUser.AdSoyad!),
