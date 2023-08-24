@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreAPI.DAL.Entity;
+using NetCoreAPI.DAL.Repository;
 using NetCoreAPI.Dtos.KategoriDtos;
-using NetCoreAPI.Models;
 
 namespace NetCoreAPI.Controllers
 {
@@ -11,10 +11,17 @@ namespace NetCoreAPI.Controllers
     [Authorize]
     public class KategoriController : ControllerBase
     {
+        private readonly IGenericRepository<Kategori> _kategoriRepository;
+
+        public KategoriController(IGenericRepository<Kategori> kategoriRepository)
+        {
+            _kategoriRepository = kategoriRepository;
+        }
+
         [HttpGet]
         public IActionResult KategoriList()
         {
-            var values = kategoriler.Select(kategori => new KategoriListeDto
+            var values = _kategoriRepository.GetAll().Select(kategori => new KategoriListeDto
             {
                 KategoriID = kategori.KategoriID,
                 KategoriAd = kategori.KategoriAd
@@ -31,22 +38,19 @@ namespace NetCoreAPI.Controllers
                 return BadRequest("Kategori boş");
             }
 
-            int kategoriID = kategoriler.Max(x => x.KategoriID) + 1;
-
             var yeniKategori = new Kategori
             {
-                KategoriID = kategoriEkleDto.KategoriID,
                 KategoriAd = kategoriEkleDto.KategoriAd
             };
 
-            kategoriler.Add(yeniKategori);
+            _kategoriRepository.Add(yeniKategori);
             return Ok("Yeni kategori başarıyla eklendi");
         }
 
         [HttpGet("{id}")]
         public IActionResult KategoriGet(int id)
         {
-            var kategori = kategoriler.FirstOrDefault(x => x.KategoriID == id);
+            var kategori = _kategoriRepository.GetById(id);
 
             if (kategori == null)
             {
@@ -55,7 +59,6 @@ namespace NetCoreAPI.Controllers
 
             var kategoriGetDTO = new KategoriAlDto
             {
-                KategoriID = kategori.KategoriID,
                 KategoriAd = kategori.KategoriAd
             };
 
@@ -65,15 +68,15 @@ namespace NetCoreAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult KategoriUpdate(int id, [FromBody] KategoriGuncelleDto kategoriGuncelleDto)
         {
-            var kategori = kategoriler.FirstOrDefault(x => x.KategoriID == id);
+            var kategori = _kategoriRepository.GetById(id);
 
             if (kategori == null)
             {
                 return NotFound("Kategori mevcut değil");
             }
 
-            kategori.KategoriID = kategoriGuncelleDto.KategoriID;
             kategori.KategoriAd = kategoriGuncelleDto.KategoriAd;
+            _kategoriRepository.Update(kategori);
 
             return Ok("Kategori Düzenlendi");
         }
@@ -81,23 +84,17 @@ namespace NetCoreAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult KategoriDelete(int id)
         {
-            var value = kategoriler.Where(x => x.KategoriID == id).FirstOrDefault();
+            var kategori = _kategoriRepository.GetById(id);
 
-            if(value == null)
+            if (kategori == null)
             {
                 return BadRequest("Kategori bulunamadı");
             }
 
-            kategoriler.Remove(value);
+            _kategoriRepository.Delete(kategori);
             return Ok("Kategori başarıyla silindi");
             
         }
 
-        private static List<Kategori> kategoriler = new List<Kategori>
-        {
-            new Kategori { KategoriID = 1, KategoriAd = "Elektronik" },
-            new Kategori { KategoriID = 2, KategoriAd = "Giyim" },
-            new Kategori { KategoriID = 3, KategoriAd = "Ev Eşyaları" }
-        };
     }
 }

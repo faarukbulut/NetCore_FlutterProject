@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NetCoreAPI.BL;
+using NetCoreAPI.DAL.Concrete;
+using NetCoreAPI.DAL.Repository;
 using NetCoreAPI.Models;
 using System.Text;
 
@@ -10,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddScoped<Context>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+
 
 // JWT TOKEN
 var jwtSettings = builder.Configuration.GetSection("AppSettings").Get<JwtSettings>();

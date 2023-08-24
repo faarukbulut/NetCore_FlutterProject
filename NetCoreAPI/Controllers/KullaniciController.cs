@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NetCoreAPI.BL;
+using NetCoreAPI.DAL.Entity;
+using NetCoreAPI.DAL.Repository;
 using NetCoreAPI.Dtos.KullaniciDtos;
-using NetCoreAPI.Models;
 
 namespace NetCoreAPI.Controllers
 {
@@ -10,32 +11,25 @@ namespace NetCoreAPI.Controllers
     public class KullaniciController : ControllerBase
     {
         private readonly IBuildToken _buildToken;
+        private readonly IGenericRepository<Kullanici> _kullaniciRepository;
 
-        public KullaniciController(IBuildToken buildToken)
+        public KullaniciController(IBuildToken buildToken, IGenericRepository<Kullanici> kullaniciRepository)
         {
             _buildToken = buildToken;
+            _kullaniciRepository = kullaniciRepository;
         }
 
         [HttpPost]
         public IActionResult Oturum([FromBody] KullaniciLoginDto kullaniciLoginDto)
         {
-            var authUser = _kullanici.FirstOrDefault(x => x.KullaniciAdi == kullaniciLoginDto.KullaniciAdi && x.Sifre == kullaniciLoginDto.Sifre);
+            var authUser = _kullaniciRepository.GetFirstOrDefault(x => x.KullaniciAdi == kullaniciLoginDto.KullaniciAdi && x.Sifre == kullaniciLoginDto.Sifre);
 
-            if(authUser == null)
+            if (authUser == null)
             {
                 return BadRequest("Kullanıcı adı veya şifre hatalı");
             }
 
             return Ok(new { Token = _buildToken.GenerateToken(authUser) });
         }
-
-
-
-        private static readonly List<Kullanici> _kullanici = new List<Kullanici>
-        {
-            new Kullanici{KullaniciID = 1, KullaniciAdi="test1", Sifre = "123456", AdSoyad="Faruk Bulut"},
-        };
-
-
     }
 }

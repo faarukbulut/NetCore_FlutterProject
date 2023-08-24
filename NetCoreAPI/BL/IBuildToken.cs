@@ -1,4 +1,4 @@
-﻿using NetCoreAPI.Models;
+﻿using NetCoreAPI.DAL.Entity;
 
 namespace NetCoreAPI.BL
 {

@@ -1,4 +1,4 @@
-﻿namespace NetCoreAPI.Models
+﻿namespace NetCoreAPI.DAL.Entity
 {
     public class Kategori
     {
