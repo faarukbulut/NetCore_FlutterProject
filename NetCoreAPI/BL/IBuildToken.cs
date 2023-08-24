@@ -1,6 +1,6 @@
 ﻿using NetCoreAPI.Models;
 
-namespace NetCoreAPI.DAL
+namespace NetCoreAPI.BL
 {
     public interface IBuildToken
     {

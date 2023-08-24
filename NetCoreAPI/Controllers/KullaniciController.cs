@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetCoreAPI.DAL;
+using NetCoreAPI.BL;
 using NetCoreAPI.Dtos.KullaniciDtos;
 using NetCoreAPI.Models;
 
