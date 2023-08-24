@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using NetCoreAPI.DAL;
+using NetCoreAPI.Dtos.KullaniciDtos;
 using NetCoreAPI.Models;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace NetCoreAPI.Controllers
 {
@@ -21,9 +17,9 @@ namespace NetCoreAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Oturum([FromBody] Kullanici kullanici)
+        public IActionResult Oturum([FromBody] KullaniciLoginDto kullaniciLoginDto)
         {
-            var authUser = _kullanici.FirstOrDefault(x => x.KullaniciAdi == kullanici.KullaniciAdi && x.Sifre == kullanici.Sifre);
+            var authUser = _kullanici.FirstOrDefault(x => x.KullaniciAdi == kullaniciLoginDto.KullaniciAdi && x.Sifre == kullaniciLoginDto.Sifre);
 
             if(authUser == null)
             {

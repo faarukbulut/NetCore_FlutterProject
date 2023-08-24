@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NetCoreAPI.Dtos.KategoriDtos;
 using NetCoreAPI.Models;
 
 namespace NetCoreAPI.Controllers
@@ -13,46 +14,67 @@ namespace NetCoreAPI.Controllers
         [HttpGet]
         public IActionResult KategoriList()
         {
-            return Ok(kategoriler);
+            var values = kategoriler.Select(kategori => new KategoriListeDto
+            {
+                KategoriID = kategori.KategoriID,
+                KategoriAd = kategori.KategoriAd
+            }).ToList();
+
+            return Ok(values);
         }
 
         [HttpPost]
-        public IActionResult KategoriAdd([FromBody] Kategori kategori)
+        public IActionResult KategoriAdd([FromBody] KategoriEkleDto kategoriEkleDto)
         {
-            if (kategori == null)
+            if (kategoriEkleDto == null)
             {
                 return BadRequest("Kategori boş");
             }
 
             int kategoriID = kategoriler.Max(x => x.KategoriID) + 1;
-            kategori.KategoriID = kategoriID;
 
-            kategoriler.Add(kategori);
+            var yeniKategori = new Kategori
+            {
+                KategoriID = kategoriEkleDto.KategoriID,
+                KategoriAd = kategoriEkleDto.KategoriAd
+            };
+
+            kategoriler.Add(yeniKategori);
             return Ok("Yeni kategori başarıyla eklendi");
         }
 
         [HttpGet("{id}")]
         public IActionResult KategoriGet(int id)
         {
-            var value = kategoriler.Where(x => x.KategoriID == id).FirstOrDefault();
+            var kategori = kategoriler.FirstOrDefault(x => x.KategoriID == id);
 
-            if(value == null)
+            if (kategori == null)
             {
-                return BadRequest("Kategori mevcut değil");
-            }
-            else
-            {
-                return Ok(value);
+                return NotFound("Kategori mevcut değil");
             }
 
+            var kategoriGetDTO = new KategoriAlDto
+            {
+                KategoriID = kategori.KategoriID,
+                KategoriAd = kategori.KategoriAd
+            };
+
+            return Ok(kategoriGetDTO);
         }
 
         [HttpPut("{id}")]
-        public IActionResult KategoriUpdate(int id, [FromBody] Kategori kategori)
+        public IActionResult KategoriUpdate(int id, [FromBody] KategoriGuncelleDto kategoriGuncelleDto)
         {
-            var value = kategoriler.Where(x => x.KategoriID == id).FirstOrDefault();
+            var kategori = kategoriler.FirstOrDefault(x => x.KategoriID == id);
 
-            value.KategoriAd = kategori.KategoriAd;
+            if (kategori == null)
+            {
+                return NotFound("Kategori mevcut değil");
+            }
+
+            kategori.KategoriID = kategoriGuncelleDto.KategoriID;
+            kategori.KategoriAd = kategoriGuncelleDto.KategoriAd;
+
             return Ok("Kategori Düzenlendi");
         }
 

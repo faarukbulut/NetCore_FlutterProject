@@ -1,1 +1,1 @@
-const String apiBaseUrl = "https://api.alesia.net.tr/api";
+const String apiBaseUrl = "https://localhost:44352/api";

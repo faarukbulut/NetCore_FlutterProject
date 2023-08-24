@@ -34,7 +34,7 @@ class KategoriController extends GetxController{
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       final List<dynamic> responseData = json.decode(response.body);
       kategoriler.value = responseData.map((json) => Kategori.fromJson(json)).toList();
     } else {
@@ -58,7 +58,7 @@ class KategoriController extends GetxController{
       body: jsonEncode(data),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       kategoriAd.text = "";
       return Get.to(() => const KategoriListeSayfa());
     } else {
@@ -82,7 +82,7 @@ class KategoriController extends GetxController{
       },
     );
 
-    if(response.statusCode == 200){
+    if(response.statusCode >= 200 && response.statusCode < 300){
       final Map<String, dynamic> responseData = json.decode(response.body);
       kategori.assignAll([Kategori.fromJson(responseData)]);
     }else{
@@ -107,7 +107,7 @@ class KategoriController extends GetxController{
       body: jsonEncode(data),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       kategoriAd.text = "";
       return Get.to(() => const KategoriListeSayfa());
     } else {
@@ -128,7 +128,7 @@ class KategoriController extends GetxController{
       },
     );
 
-    if (response.statusCode != 200) {
+    if(response.statusCode < 200 || response.statusCode >= 300) {
       Get.offAll(() => const GirisSayfa());
     }
   }

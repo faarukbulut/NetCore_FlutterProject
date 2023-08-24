@@ -33,7 +33,7 @@ class KullaniciController extends GetxController{
       body: jsonEncode(data),
     );
 
-    if(response.statusCode == 200){
+    if(response.statusCode >= 200 && response.statusCode < 300){
       final responseBody = json.decode(response.body);
       currentUserBilgileriniAl(responseBody['token']);
       await SecureStorage().saveToken(responseBody['token']);
