@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/helpers/constants.dart';
 import 'package:flutter_ui/view/giris_sayfa/giris_sayfa.dart';
 import 'package:flutter_ui/view/kategori_sayfa/kategori_liste_sayfa.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,7 @@ class KategoriController extends GetxController{
     var token = await SecureStorage().getToken();
 
     final response = await http.get(
-      Uri.parse('https://localhost:7176/api/Kategori'),
+      Uri.parse('${apiBaseUrl}/Kategori'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -49,7 +50,7 @@ class KategoriController extends GetxController{
     };
 
     final response = await http.post(
-      Uri.parse('https://localhost:7176/api/Kategori'),
+      Uri.parse('${apiBaseUrl}/Kategori'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -75,7 +76,7 @@ class KategoriController extends GetxController{
     var token = await SecureStorage().getToken();
 
     final response = await http.get(
-      Uri.parse('https://localhost:7176/api/Kategori/$id'),
+      Uri.parse('${apiBaseUrl}/Kategori/$id'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -98,7 +99,7 @@ class KategoriController extends GetxController{
     };
 
     final response = await http.put(
-      Uri.parse('https://localhost:7176/api/Kategori/$id'),
+      Uri.parse('${apiBaseUrl}/Kategori/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -121,7 +122,7 @@ class KategoriController extends GetxController{
     var token = await SecureStorage().getToken();
 
     final response = await http.delete(
-      Uri.parse('https://localhost:7176/api/Kategori/$id'),
+      Uri.parse('${apiBaseUrl}/Kategori/$id'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },

@@ -6,6 +6,7 @@ import 'package:flutter_ui/view/yonetim_sayfa.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+import '../helpers/constants.dart';
 import '../helpers/secure_storage.dart';
 import '../models/kullanici.dart';
 
@@ -25,7 +26,7 @@ class KullaniciController extends GetxController{
     };
 
     final response = await http.post(
-      Uri.parse('https://localhost:7176/api/Kullanici'),
+      Uri.parse('${apiBaseUrl}/Kullanici'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
