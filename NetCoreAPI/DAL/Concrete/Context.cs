@@ -5,10 +5,7 @@ namespace NetCoreAPI.DAL.Concrete
 {
     public class Context : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("server=FARUK\\SQLEXPRESS;database=NETCoreFlutter;integrated security=true;Encrypt=False");
-        }
+        public Context(DbContextOptions<Context> options) : base(options) { }
 
         public DbSet<Kullanici> Kullanicis { get; set; }
 

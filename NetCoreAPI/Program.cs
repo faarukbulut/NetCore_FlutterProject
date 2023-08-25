@@ -1,5 +1,6 @@
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NetCoreAPI.BL;
 using NetCoreAPI.DAL.Concrete;
@@ -19,11 +20,18 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<Context>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+
+// DB Context
+builder.Services.AddDbContext<Context>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
 // HangFire
-var hangfireConnectionString = "server=FARUK\\SQLEXPRESS;database=NETCoreFlutter;integrated security=true;Encrypt=False";
 builder.Services.AddHangfire(x =>
 {
-    x.UseSqlServerStorage(hangfireConnectionString);
+    x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
     RecurringJob.AddOrUpdate<Job>(j => j.DbControl(), "* * * * *");
 });
 builder.Services.AddHangfireServer();
