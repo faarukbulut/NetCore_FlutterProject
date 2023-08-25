@@ -6,5 +6,7 @@
         public string KullaniciAdi { get; set; }
         public string Sifre { get; set; }
         public string? AdSoyad { get; set; }
+        public bool gold { get; set; }
+        public int goldsure { get; set; }
     }
 }

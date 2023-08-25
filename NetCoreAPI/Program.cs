@@ -1,8 +1,10 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using NetCoreAPI.BL;
 using NetCoreAPI.DAL.Concrete;
 using NetCoreAPI.DAL.Repository;
+using NetCoreAPI.Jobs;
 using NetCoreAPI.Models;
 using System.Text;
 
@@ -17,6 +19,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<Context>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+// HangFire
+var hangfireConnectionString = "server=FARUK\\SQLEXPRESS;database=NETCoreFlutter;integrated security=true;Encrypt=False";
+builder.Services.AddHangfire(x =>
+{
+    x.UseSqlServerStorage(hangfireConnectionString);
+    RecurringJob.AddOrUpdate<Job>(j => j.DbControl(), "* * * * *");
+});
+builder.Services.AddHangfireServer();
 
 
 // JWT TOKEN
@@ -60,6 +70,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+// Hangfire
+app.UseHangfireDashboard();
 
 app.MapControllers();
 
