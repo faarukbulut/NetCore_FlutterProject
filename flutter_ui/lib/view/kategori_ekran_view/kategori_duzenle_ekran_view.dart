@@ -1,44 +1,36 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_ui/components/widget.dart';
+import 'package:flutter_ui/pages/kategori_ekran/kategori_liste_ekran.dart';
 import 'package:get/get.dart';
-import '../../components/widget.dart';
-import '../../controller/kategori_controller.dart';
-import 'kategori_liste_sayfa.dart';
 
-class KategoriDuzenleSayfa extends StatefulWidget {
+class KategoriDuzenleEkranView extends StatelessWidget {
+  final RxBool isLoading;
+  final TextEditingController kategoriAd;
   final int kategoriID;
+  final Function kategoriDuzenle;
 
-  const KategoriDuzenleSayfa({
+
+  const KategoriDuzenleEkranView({
     super.key,
+    required this.isLoading,
+    required this.kategoriAd,
     required this.kategoriID,
+    required this.kategoriDuzenle,
   });
 
   @override
-  State<KategoriDuzenleSayfa> createState() => _KategoriDuzenleSayfaState();
-}
-
-class _KategoriDuzenleSayfaState extends State<KategoriDuzenleSayfa> {
-
-  final KategoriController _kategoriController = Get.put(KategoriController());
-
-  @override
-  void initState() {
-    super.initState();
-    _kategoriController.kategoriAlIslemSirasi(widget.kategoriID);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
+    return SafeArea(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             Row(
               children: [
                 GestureDetector(
-                  onTap:(){Get.to(() => KategoriListeSayfa());},
+                  onTap:(){Get.to(() => const KategoriListeEkran());},
                   child: const Icon(Icons.chevron_left),
                 ),
                 const SizedBox(width:10),
@@ -50,10 +42,10 @@ class _KategoriDuzenleSayfaState extends State<KategoriDuzenleSayfa> {
 
             Obx(() => 
             
-              _kategoriController.isLoading == false ? CircularProgressIndicator() : 
+              isLoading.value == false ? const CircularProgressIndicator() : 
 
               TextField(
-                controller: _kategoriController.kategoriAd,
+                controller: kategoriAd,
                 decoration: textFieldDecoration('Kategori Ad'),
               ), 
             
@@ -62,10 +54,9 @@ class _KategoriDuzenleSayfaState extends State<KategoriDuzenleSayfa> {
             const SizedBox(height:20),
 
             butonWidget(
-              (){_kategoriController.kategoriDuzenle(widget.kategoriID);},
+              (){ kategoriDuzenle(kategoriID);},
               'Kategori Düzenle',
             ),
-
 
           ],
         ),

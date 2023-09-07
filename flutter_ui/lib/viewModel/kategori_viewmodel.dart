@@ -1,14 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_ui/helpers/constants.dart';
-import 'package:flutter_ui/view/giris_sayfa/giris_sayfa.dart';
-import 'package:flutter_ui/view/kategori_sayfa/kategori_liste_sayfa.dart';
+import 'package:flutter_ui/helpers/secure_storage.dart';
+import 'package:flutter_ui/models/kategori.dart';
+import 'package:flutter_ui/pages/giris_ekran.dart';
+import 'package:flutter_ui/pages/kategori_ekran/kategori_liste_ekran.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../helpers/secure_storage.dart';
-import '../models/kategori.dart';
 
-class KategoriController extends GetxController{
+class KategoriViewModel extends GetxController{
   RxList<Kategori> kategoriler = RxList<Kategori>();
   RxList<Kategori> kategori = RxList<Kategori>();
   RxBool isLoading = false.obs;
@@ -28,7 +29,7 @@ class KategoriController extends GetxController{
     var token = await SecureStorage().getToken();
 
     final response = await http.get(
-      Uri.parse('${apiBaseUrl}/Kategori'),
+      Uri.parse('$apiBaseUrl/Kategori'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -38,7 +39,7 @@ class KategoriController extends GetxController{
       final List<dynamic> responseData = json.decode(response.body);
       kategoriler.value = responseData.map((json) => Kategori.fromJson(json)).toList();
     } else {
-      Get.offAll(() => const GirisSayfa());
+      Get.offAll(() => const GirisEkran());
     }
   }
 
@@ -50,7 +51,7 @@ class KategoriController extends GetxController{
     };
 
     final response = await http.post(
-      Uri.parse('${apiBaseUrl}/Kategori'),
+      Uri.parse('$apiBaseUrl/Kategori'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -60,9 +61,9 @@ class KategoriController extends GetxController{
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       kategoriAd.text = "";
-      return Get.to(() => const KategoriListeSayfa());
+      return Get.to(() => const KategoriListeEkran());
     } else {
-      Get.offAll(() => const GirisSayfa());
+      Get.offAll(() => const GirisEkran());
     }
   }
 
@@ -76,7 +77,7 @@ class KategoriController extends GetxController{
     var token = await SecureStorage().getToken();
 
     final response = await http.get(
-      Uri.parse('${apiBaseUrl}/Kategori/$id'),
+      Uri.parse('$apiBaseUrl/Kategori/$id'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -86,7 +87,7 @@ class KategoriController extends GetxController{
       final Map<String, dynamic> responseData = json.decode(response.body);
       kategori.assignAll([Kategori.fromJson(responseData)]);
     }else{
-      Get.offAll(() => const GirisSayfa());
+      Get.offAll(() => const GirisEkran());
     }
   }
 
@@ -99,7 +100,7 @@ class KategoriController extends GetxController{
     };
 
     final response = await http.put(
-      Uri.parse('${apiBaseUrl}/Kategori/$id'),
+      Uri.parse('$apiBaseUrl/Kategori/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer $token',
@@ -109,9 +110,9 @@ class KategoriController extends GetxController{
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       kategoriAd.text = "";
-      return Get.to(() => const KategoriListeSayfa());
+      return Get.to(() => const KategoriListeEkran());
     } else {
-      Get.offAll(() => const GirisSayfa());
+      Get.offAll(() => const GirisEkran());
     }
 
   }
@@ -122,16 +123,15 @@ class KategoriController extends GetxController{
     var token = await SecureStorage().getToken();
 
     final response = await http.delete(
-      Uri.parse('${apiBaseUrl}/Kategori/$id'),
+      Uri.parse('$apiBaseUrl/Kategori/$id'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
     );
 
     if(response.statusCode < 200 || response.statusCode >= 300) {
-      Get.offAll(() => const GirisSayfa());
+      Get.offAll(() => const GirisEkran());
     }
   }
-
 
 }

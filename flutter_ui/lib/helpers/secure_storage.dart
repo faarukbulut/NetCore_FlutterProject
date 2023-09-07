@@ -1,7 +1,4 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_ui/view/giris_kontrol.dart';
-import 'package:flutter_ui/view/giris_sayfa/giris_sayfa.dart';
-import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class SecureStorage{

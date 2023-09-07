@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/view/giris_sayfa/giris_sayfa.dart';
-import 'package:flutter_ui/view/yonetim_sayfa.dart';
+import 'package:flutter_ui/pages/anasayfa_ekran.dart';
+import 'package:flutter_ui/viewModel/kullanici_viewmodel.dart';
 import 'package:get/get.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import '../controller/kullanici_controller.dart';
 import '../helpers/secure_storage.dart';
+import '../pages/giris_ekran.dart';
 
 class GirisKontrol extends StatefulWidget {
   const GirisKontrol({super.key});
@@ -15,7 +14,7 @@ class GirisKontrol extends StatefulWidget {
 
 class _GirisKontrolState extends State<GirisKontrol> {
 
-  final KullaniciController _kullaniciController = Get.put(KullaniciController());
+  final KullaniciViewModel _kullaniciController = Get.put(KullaniciViewModel());
 
   String? token;
   bool isLoading = false;
@@ -52,9 +51,9 @@ class _GirisKontrolState extends State<GirisKontrol> {
       return const Scaffold(body: Center(child: CircularProgressIndicator())); // Splash olarak kullanılabilir.
     }
     else if(token != null){
-      return const YonetimSayfa();
+      return const AnasayfaEkran();
     }else{
-      return const GirisSayfa();
+      return const GirisEkran();
     }
   }
 }

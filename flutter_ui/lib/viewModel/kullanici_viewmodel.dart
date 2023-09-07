@@ -1,17 +1,15 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_ui/view/yonetim_sayfa.dart';
+import 'package:flutter_ui/helpers/constants.dart';
+import 'package:flutter_ui/helpers/secure_storage.dart';
+import 'package:flutter_ui/models/kullanici.dart';
+import 'package:flutter_ui/pages/anasayfa_ekran.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
-import '../helpers/constants.dart';
-import '../helpers/secure_storage.dart';
-import '../models/kullanici.dart';
+import 'package:http/http.dart' as http;
 
-class KullaniciController extends GetxController{
 
+class KullaniciViewModel extends GetxController{
   final formKey = GlobalKey<FormState>();
   final TextEditingController kullaniciAdiController = TextEditingController();
   final TextEditingController sifreController = TextEditingController();
@@ -26,7 +24,7 @@ class KullaniciController extends GetxController{
     };
 
     final response = await http.post(
-      Uri.parse('${apiBaseUrl}/Kullanici'),
+      Uri.parse('$apiBaseUrl/Kullanici'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -37,16 +35,18 @@ class KullaniciController extends GetxController{
       final responseBody = json.decode(response.body);
       currentUserBilgileriniAl(responseBody['token']);
       await SecureStorage().saveToken(responseBody['token']);
-      Get.offAll(() => const YonetimSayfa());
+      Get.offAll(() => const AnasayfaEkran());
     }else{
       final hataMesaj = response.body;
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Giriş başarısız'),
-          content: Text(hataMesaj),
-        ),
-      );
+      if(context.mounted){
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Giriş başarısız'),
+            content: Text(hataMesaj),
+          ),
+        );
+      }
     }
 
   }
@@ -55,6 +55,5 @@ class KullaniciController extends GetxController{
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
     kullanici.value.adSoyad = decodedToken['name'] as String?;
   }
-
-
+  
 }
